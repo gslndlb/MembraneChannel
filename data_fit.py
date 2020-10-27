@@ -16,18 +16,13 @@ plt.rc('ytick', labelsize=BIGGER_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=BIGGER_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=HUGE_SIZE)  # fontsize of the figure title
 
-x_data = [[0.715, 10.3, 15., 20.3, 24.4, 30.3], [5.01, 10., 14.9,
-                                                 20.1, 25.2, 30.2,
-                                                 35.3, 40.1], [50.3,
-                                                               55.1, 60., 65.5]]
+x_data = [[0.715, 10.3, 15., 20.3, 24.4, 30.3],
+          [5.01, 10., 14.9, 20.1, 25.2, 30.2, 35.3, 40.1],
+          [50.3, 55.1, 60., 65.5]]
 
-y_data = [[0.0164, 0.197, 0.462, 0.519, 0.721, 0.962], [0., 0., 0.,
-                                                        0.0378, 0.118,
-                                                        0.4, 0.734,
-                                                        0.95],
-          [0.00546,
-           0.0246, 0.107,
-           0.801]]
+y_data = [[0.0164, 0.197, 0.462, 0.519, 0.721, 0.962],
+          [0., 0., 0., .0378, 0.118, .4, 0.734, .95],
+          [0.00546, .0246, 0.107, .801]]
 
 plt.figure(1)
 colors = ['#377eb8', '#ff7f00', '#4daf4a', '#f781bf', '#a65628',
@@ -39,6 +34,7 @@ T = 37 + 273
 kb = 8.6e-5
 beta = 1/T/kb
 R = 8.314
+
 
 def fit_function(x, Pi, alpha):
     return 1/(1+np.exp(-Pi - alpha*x))
