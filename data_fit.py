@@ -1,10 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import linregress
 from scipy.optimize import curve_fit
-import numpy.random as rd
-import scipy.stats as stats
-import copy
 
 plt.ion()
 plt.close('all')
