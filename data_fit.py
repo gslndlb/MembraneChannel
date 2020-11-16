@@ -29,7 +29,7 @@ colors = ['#377eb8', '#ff7f00', '#4daf4a', '#f781bf', '#a65628',
           '#984ea3', '#999999', '#e41a1c', '#dede00']
 
 e_bonds = [0.6, 2, 15, 20, 40]
-name_bonds = ["Keesom", "Dipole-dipole", "Ion-dipole", "Weak hydrogen", "Strong hydrogen"] 
+name_bonds = ["Dipole-Dipole", "Ion-induced-dipole", "Ion-dipole", "Weak hydrogen", "Strong hydrogen"] 
 # Color-blind-friendly set of colors
 # colors = ['tab:blue', 'tab:red', 'tab:green']
 
@@ -138,5 +138,6 @@ plt.plot(xx, fit_fun(xx, 12.5, 18.2, 2.1), '', color=colors[ii-1], label='Fit')
 plt.xlim(15.8, 20.2)
 plt.ylim(0, 125)
 plt.xlabel(r'$C$')
-plt.ylabel(r'$E_{closed}$ (kJ/mol')
+plt.ylabel(r'$E_{closed}$ (kJ/mol)')
 plt.legend()
+plt.tight_layout()
