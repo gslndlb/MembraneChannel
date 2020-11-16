@@ -88,21 +88,68 @@ popt_end = np.array(popt_end)
 PC = [16, 18, 20]
 plt.figure(2)
 plt.subplot(211)
-plt.plot(PC, popt_init[:, 0]*R*T/1e3, label='guess')
-plt.plot(PC, popt_end[:, 0]*R*T/1e3, label='fit')
+# plt.plot(PC, popt_init[:, 0]*R*T/1e3, label='guess')
+plt.plot(PC, -popt_end[:, 0]*R*T/1e3, '--o', label='fit')
 plt.ylabel(r'$\Delta E$ (kJ/mol)')
 plt.legend()
+plt.yscale('log')
 plt.subplot(212)
-plt.plot(PC, popt_init[:, 1])
-plt.plot(PC, popt_end[:, 1])
+# plt.plot(PC, popt_init[:, 1])
+plt.plot(PC, popt_end[:, 1], '--o')
 plt.ylabel(r'$\beta A/a^2$')
 plt.xlabel('x')
+plt.yscale('log')
 plt.tight_layout()
 
 plt.figure(3)
 for ii in range(len(e_bonds)):
-    plt.plot(PC, -popt_end[:, 0]*R*T/1e3/e_bonds[ii], label=name_bonds[ii], color=colors[ii])
+    plt.plot(PC, -popt_end[:, 0]*R*T/1e3/e_bonds[ii], '--o', label=name_bonds[ii], color=colors[ii])
 plt.ylabel(r'$n_s(C)$')
 plt.xlabel(r'$C$')
 plt.yscale('log')
 plt.legend()
+
+ii = 1
+# plt.close('all')
+Cs = np.linspace(16, 20, 100)
+alphas = np.linspace(17.5, 20, 10)
+alphas = [18.25]
+plt.figure(4)
+plt.plot(PC, -popt_end[:, 0]*R*T/1e3/e_bonds[ii], '--o', label=name_bonds[ii], color=colors[ii])
+
+def test_fun(C, alpha):
+    res = np.zeros(len(C))
+    thres_ok = np.zeros(len(C), dtype=bool)
+
+    A = -popt_end[0, 0]*R*T/1e3/e_bonds[ii]/(16/np.sqrt(alpha**2-16**2))
+
+    sqrt_ok = C < alpha
+    thres_ok[sqrt_ok] = A*C[sqrt_ok]/np.sqrt(alpha**2 - C[sqrt_ok]**2) < -popt_end[2, 0]*R*T/1e3/e_bonds[ii]
+    res[thres_ok] = A*C[thres_ok]/np.sqrt(alpha**2 - C[thres_ok]**2)
+    res[~thres_ok] = -popt_end[2, 0]*R*T/1e3/e_bonds[ii]
+    return res
+
+
+# for alpha in alphas:
+#     plt.plot(Cs, test_fun(Cs, alpha), color=colors[ii+1])
+
+
+yy = -popt_end[2, 0]*R*T/1e3/e_bonds[ii]
+xx = np.linspace(16, 20, 100)
+
+
+def fit_fun(C, e_0, alpha, q):
+    res = np.zeros(len(C))
+    sqrt_ok = C < alpha
+    for l in range(1, 5):
+        res[sqrt_ok] += e_0*np.minimum(1/np.sqrt(alpha**2 - C[sqrt_ok]**2)/np.sin(np.pi*l/5), q)
+        res[~sqrt_ok] += e_0*q
+    return res
+
+# popt, pcov = curve_fit(fit_fun, xdata=xx, ydata=yy, p0=(A, alpha, 1.))
+
+
+A = -popt_end[0, 0]*R*T/1e3/e_bonds[ii]/(16/np.sqrt(alpha**2-16**2))
+plt.plot(xx, fit_fun(xx, 6.25, 18.2, 2.1), '', color=colors[ii-1])
+plt.xlim(15.8, 20.2)
+plt.ylim(0, 60)
