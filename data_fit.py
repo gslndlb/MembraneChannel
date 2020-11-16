@@ -28,8 +28,8 @@ plt.figure(1)
 colors = ['#377eb8', '#ff7f00', '#4daf4a', '#f781bf', '#a65628',
           '#984ea3', '#999999', '#e41a1c', '#dede00']
 
-e_bonds = [0.6, 2, 15, 20, 40]
-name_bonds = ["Dipole-Dipole", "Ion-induced-dipole", "Ion-dipole", "Weak hydrogen", "Strong hydrogen"] 
+e_bonds = np.array([1, 0.5, 3, 12, 16])*4.186 #kcal --> kJ
+name_bonds = ["London", "Weak Keesom", "Strong Keesom", "Weak hydrogen", "Strong hydrogen"] 
 # Color-blind-friendly set of colors
 # colors = ['tab:blue', 'tab:red', 'tab:green']
 
