@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="dessin.svg"
+   sodipodi:docname="heigth_bonds.svg"
    inkscape:export-filename="/home/gdlb/Documents/Cours/M2PCS/Biophy/MembraneChannel/heigth_bonds.png"
    inkscape:export-xdpi="194"
    inkscape:export-ydpi="194">
@@ -720,7 +720,7 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="374.37243"
+     inkscape:cx="160.37243"
      inkscape:cy="724.22911"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -738,7 +738,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -746,13 +746,6 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="opacity:1;fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:1.69091415;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:1.69091414, 1.69091414;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect7147"
-       width="203.27208"
-       height="174.69708"
-       x="2.8113174"
-       y="29.91156" />
     <g
        id="g7900">
       <path
