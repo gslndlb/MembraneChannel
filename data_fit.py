@@ -108,6 +108,7 @@ plt.ylabel(r'$n_s(C)$')
 plt.xlabel(r'$C$')
 plt.yscale('log')
 plt.legend()
+plt.tight_layout()
 
 ii = 1
 # plt.close('all')
