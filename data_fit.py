@@ -24,6 +24,8 @@ y_data = [[0.0164, 0.197, 0.462, 0.519, 0.721, 0.962],
           [0., 0., 0., .0378, 0.118, .4, 0.734, .95],
           [0.00546, .0246, 0.107, .801]]
 
+x_data = [[x_data[ii][jj]*1 for jj in range(len(x_data[ii]))] for ii in range(len(x_data))]
+
 plt.figure(1)
 colors = ['#377eb8', '#ff7f00', '#4daf4a', '#f781bf', '#a65628',
           '#984ea3', '#999999', '#e41a1c', '#dede00']
@@ -129,7 +131,7 @@ Cs = np.linspace(16, 20, 100)
 alphas = np.linspace(17.5, 20, 10)
 alphas = [18.25]
 
-plt.close('all')
+# plt.close('all')
 plt.figure('Fite_energ')
 plt.plot(PC, E_s, '--o', color=colors[ii], label='Energy')
 yy = -popt_end[2, 0]*R*T/1e3/e_bonds[ii]
