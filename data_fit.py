@@ -34,7 +34,7 @@ name_bonds = ["London", "Weak Keesom", "Strong Keesom", "Weak hydrogen", "Strong
 # colors = ['tab:blue', 'tab:red', 'tab:green']
 
 T = 37 + 273
-kb = 8.6e-5
+kb = 1.38e-23
 beta = 1/T/kb
 R = 8.314
 
@@ -82,6 +82,10 @@ for ii in range(3):
              color=colors[ii])
 plt.tight_layout()
 
+popt_end = np.array(popt_end)
+
+E_s = -popt_end[:, 0]*R*T/1e3
+
 # print(popt_init, popt_end)
 popt_init = np.array(popt_init)
 popt_end = np.array(popt_end)
@@ -89,21 +93,30 @@ PC = [16, 18, 20]
 plt.figure(2)
 plt.subplot(211)
 # plt.plot(PC, popt_init[:, 0]*R*T/1e3, label='guess')
-plt.plot(PC, -popt_end[:, 0]*R*T/1e3, '--o', label='fit')
+plt.plot(PC, E_s, '--o', label='fit')
 plt.ylabel(r'$\Delta E$ (kJ/mol)')
 plt.legend()
-plt.yscale('log')
 plt.subplot(212)
 # plt.plot(PC, popt_init[:, 1])
-plt.plot(PC, popt_end[:, 1], '--o')
-plt.ylabel(r'$\beta A/a^2$')
-plt.xlabel('x')
-plt.yscale('log')
+R_eq_s = popt_end[:, 1]/beta/(25e-9)**2
+r = 1e-6
+R_s = r*R_eq_s/(R_eq_s - r)
+plt.plot(PC, R_s*1e6, '--o')
+plt.ylabel(r'$R (\mu$m)')
+plt.xlabel('C')
 plt.tight_layout()
 
-plt.figure(3)
+plt.figure('R')
+plt.plot(PC, R_eq_s*1e6, '--o', label=r'$R_{eq}$')
+plt.plot(PC, R_s*1e6, '--o', label=r'$R$')
+plt.ylabel(r'$\mu$m')
+plt.xlabel(r'$C$')
+plt.legend()
+plt.tight_layout()
+
+plt.figure('Bonds')
 for ii in range(len(e_bonds)):
-    plt.plot(PC, -popt_end[:, 0]*R*T/1e3/e_bonds[ii], '--o', label=name_bonds[ii], color=colors[ii])
+    plt.plot(PC, E_s/e_bonds[ii], '--o', label=name_bonds[ii], color=colors[ii])
 plt.ylabel(r'$n_s(C)$')
 plt.xlabel(r'$C$')
 plt.yscale('log')
@@ -115,10 +128,10 @@ ii = 1
 Cs = np.linspace(16, 20, 100)
 alphas = np.linspace(17.5, 20, 10)
 alphas = [18.25]
-plt.figure(4)
-plt.plot(PC, -popt_end[:, 0]*R*T/1e3, '--o', color=colors[ii], label='Energy')
 
-
+plt.close('all')
+plt.figure('Fite_energ')
+plt.plot(PC, E_s, '--o', color=colors[ii], label='Energy')
 yy = -popt_end[2, 0]*R*T/1e3/e_bonds[ii]
 xx = np.linspace(16, 20, 100)
 
@@ -127,15 +140,16 @@ def fit_fun(C, e_0, alpha, q):
     res = np.zeros(len(C))
     sqrt_ok = C < alpha
     for l in range(1, 5):
-        res[sqrt_ok] += e_0*np.minimum(1/np.sqrt(alpha**2 - C[sqrt_ok]**2)/np.sin(np.pi*l/5), q)
-        res[~sqrt_ok] += e_0*q
-    return res
+        tmp = 2*q*np.sqrt(1 - C[sqrt_ok]**2/alpha**2)*np.abs(np.sin(2*np.pi*l/5))
+        res[sqrt_ok] += e_0*np.minimum(1/tmp, 1)
+        res[~sqrt_ok] += e_0
+    return 5/2*res
+
 
 # popt, pcov = curve_fit(fit_fun, xdata=xx, ydata=yy, p0=(A, alpha, 1.))
-
-
-A = -popt_end[0, 0]*R*T/1e3*(16/np.sqrt(alpha**2-16**2))
-plt.plot(xx, fit_fun(xx, 12.5, 18.2, 2.1), '', color=colors[ii-1], label='Fit')
+alpha = alphas[0]
+e_0 = 2/5*E_s[-1]
+plt.plot(xx, fit_fun(xx, e_0/4., 18.2, 20), '', color=colors[ii-1], label='Fit')
 plt.xlim(15.8, 20.2)
 plt.ylim(0, 125)
 plt.xlabel(r'$C$')
