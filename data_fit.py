@@ -24,7 +24,12 @@ y_data = [[0.0164, 0.197, 0.462, 0.519, 0.721, 0.962],
           [0., 0., 0., .0378, 0.118, .4, 0.734, .95],
           [0.00546, .0246, 0.107, .801]]
 
-x_data = [[x_data[ii][jj]*1 for jj in range(len(x_data[ii]))] for ii in range(len(x_data))]
+x_data_mmhg = [[0.715, 10.3, 15., 20.3, 24.4, 30.3],
+          [5.01, 10., 14.9, 20.1, 25.2, 30.2, 35.3, 40.1],
+          [50.3, 55.1, 60., 65.5]]
+
+
+x_data = [[x_data[ii][jj]*133.322 for jj in range(len(x_data[ii]))] for ii in range(len(x_data))]
 
 plt.figure(1)
 colors = ['#377eb8', '#ff7f00', '#4daf4a', '#f781bf', '#a65628',
@@ -35,7 +40,7 @@ name_bonds = ["London", "Weak Keesom", "Strong Keesom", "Weak hydrogen", "Strong
 # Color-blind-friendly set of colors
 # colors = ['tab:blue', 'tab:red', 'tab:green']
 
-T = 37 + 273
+T = 21 + 273
 kb = 1.38e-23
 beta = 1/T/kb
 R = 8.314
@@ -68,19 +73,21 @@ popt_end = []
 # for ii in range(x_data.shape[0]):
 for ii in range(3):
     xx = np.array(x_data[ii])
+    xx_mmhg = np.array(x_data_mmhg[ii])
     yy = np.array(y_data[ii])
-    xxx = np.linspace(np.min(xx)-10, np.max(xx)+10, 100)
+    xxx = np.linspace(np.min(xx)-100, np.max(xx)+100, 100)
+    xxx_mmhg = xxx/133.322
     guess = [est_pi(xx, yy), est_alpha(xx, yy)]
     popt, pcov = curve_fit(fit_function, xdata=x_data[ii],
                            ydata=y_data[ii], p0=guess)
-    # plt.plot(xx, -np.log(yy)-1, '-o', 'black')
+    # plt.plot(xx_mmhg, -np.log(yy)-1, '-o', 'black')
     # print(stats.linregress(xx, np.log(1/yy)-1))
     popt_init.append(guess)
     popt_end.append(popt)
     plt.xlabel('Aspiration pressure (mmHg)')
     plt.ylabel('Opening probability')
-    plt.plot(xx, yy, 'o', label='data', color=colors[ii])
-    plt.plot(xxx, fit_function(xxx, *popt), ':', label='fit',
+    plt.plot(xx_mmhg, yy, 'o', label='data', color=colors[ii])
+    plt.plot(xxx_mmhg, fit_function(xxx, *popt), ':', label='fit',
              color=colors[ii])
 plt.tight_layout()
 
@@ -100,11 +107,11 @@ plt.ylabel(r'$\Delta E$ (kJ/mol)')
 plt.legend()
 plt.subplot(212)
 # plt.plot(PC, popt_init[:, 1])
-R_eq_s = popt_end[:, 1]/beta/(25e-9)**2
-r = 1e-6
+R_eq_s = 2/np.pi*popt_end[:, 1]/beta/((35e-10)**2-(15e-10))**2
+r = 0.5*e-6
 R_s = r*R_eq_s/(R_eq_s - r)
-plt.plot(PC, R_s*1e6, '--o')
-plt.ylabel(r'$R (\mu$m)')
+plt.plot(PC, popt_end[:, 1]/beta, '--o')
+plt.ylabel(r'-0.5 R_eq \pi (ro2-rc2)')
 plt.xlabel('C')
 plt.tight_layout()
 
@@ -113,6 +120,7 @@ plt.plot(PC, R_eq_s*1e6, '--o', label=r'$R_{eq}$')
 plt.plot(PC, R_s*1e6, '--o', label=r'$R$')
 plt.ylabel(r'$\mu$m')
 plt.xlabel(r'$C$')
+plt.ylim(0, 6)
 plt.legend()
 plt.tight_layout()
 
@@ -135,7 +143,7 @@ alphas = [18.25]
 plt.figure('Fite_energ')
 plt.plot(PC, E_s, '--o', color=colors[ii], label='Energy')
 yy = -popt_end[2, 0]*R*T/1e3/e_bonds[ii]
-xx = np.linspace(16, 20, 100)
+xx = np.linspace(16, 20, 100)*133.322
 
 
 def fit_fun(C, e_0, alpha, q):
